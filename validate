@@ -1,0 +1,40 @@
+#!/bin/bash
+
+base=$(readlink -f $(dirname "$0"))
+line_len=79
+
+err() {
+    echo "error: $@" 1>&2
+    exit 1
+}
+
+my_black() {
+    black -l $line_len "$@" || err "black $@"
+}
+
+my_pylint() {
+    pylint \
+	--max-line-length=$line_len \
+	--disable=too-many-instance-attributes \
+	--disable=too-few-public-methods \
+	--disable=too-many-arguments \
+	--disable=duplicate-code \
+	"$@" || err "pylint $@"
+}
+
+cd "$base" || err "cd $base"
+
+# Check code as a blob
+export PYTHONPATH="$base/lib"
+my_black estimator.py lib/*.py
+my_pylint estimator.py lib/*.py
+
+export PYTHONPATH="$base"
+for py in $(ls -1 2?/config.py example.py 2>/dev/null); do
+    my_black "$py"
+    my_pylint "$py"
+done
+
+echo
+echo "SUCCESS"
+echo
