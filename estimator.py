@@ -44,8 +44,8 @@ def main():
     if not args.config.is_file():
         parser.error(f"can't find config '{args.config}'")
 
-    # Place path for Config first. This allows the "stub" Config under lib/
-    # used when calling black and pylint.
+    # Place path for Config first. This allows black/pylint to import the
+    # base Config class under lib during validation testing.
     sys_path.insert(0, str(args.config.parent))
     from config import Config  # pylint: disable=import-outside-toplevel
 

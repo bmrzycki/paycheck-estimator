@@ -25,6 +25,7 @@ class Config:
         self.pay.dental = 0.0
         self.pay.vision = 0.0
         self.pay.increase = Holder("Regular pay increase")
+        self.pay.increase.start_date = None
         # Sometimes things happen and money comes to you because the company
         # made a boo boo. Start the year with a net offset if necessary
         self.pay.start_net_fudge = 0.0
@@ -77,10 +78,15 @@ class Config:
         self.medicare.surtax_percent = 0.9
         self.social_security.percent = 6.2
         self.social_security.cap = 168_600.0
+
+        # Call the child's config method.
         self.config()
-        # These things must be done AFTER the child calls .config()
+
+        # Settings which must react to the child settings are below.
         self.filename = Path(self.filename).resolve()
-        self.pay.increase.start_date = self.day(4, 1)
+        if self.pay.increase.start_date is None:
+            # Child didn't set, use the default.
+            self.pay.increase.start_date = self.day(4, 1)
 
     def config(self):
         "Overwritten by child class to setup attributes"

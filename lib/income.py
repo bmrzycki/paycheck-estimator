@@ -78,18 +78,15 @@ class Income:
 
     def calc_net(self):
         "calculate final (net) income"
-        self.net = self.gross
-        for save in ("contrib_401k", "contrib_401k_post"):
-            self.net -= getattr(self, save)
         self.tax_medicare_total = self.tax_medicare + self.tax_medicare_surtax
-        for tax in (
-            "tax_federal",
-            "tax_social",
-            "tax_medicare",
-            "tax_medicare_surtax",
-        ):
-            self.net -= getattr(self, tax)
+        self.net = self.gross
+        self.net -= self.contrib_401k
+        self.net -= self.contrib_401k_post
+        self.net -= self.tax_federal
+        self.net -= self.tax_social
+        self.net -= self.tax_medicare_total
         self.net -= self.fsa
+        self.net -= self.hsa
         self.net -= self.medical
         self.net -= self.dental
         self.net -= self.vision

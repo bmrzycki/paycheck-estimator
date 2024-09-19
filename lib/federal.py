@@ -14,8 +14,7 @@ class Federal:
         # NOTE: table must be reverse sorted for ._tax_salary()
         self.table = sorted(self.table, reverse=True)
 
-        ytd_gross_supplimental = 0.0
-        ytd_tax = 0.0
+        ytd_tax = ytd_gross_supplimental = 0.0
         for income in self.income:
             if income.percent_tax_federal > 0.0:
                 percent = income.percent_tax_federal
@@ -38,7 +37,7 @@ class Federal:
 
     def _tax_salary(self, income):
         amount = income.federal_taxable - income.personal_exemption
-        tax, top_percent = 0.0, 0.0
+        tax = top_percent = 0.0
         for band_income_max, band_percent in self.table:
             if amount > band_income_max:
                 top_percent = max(top_percent, band_percent)
