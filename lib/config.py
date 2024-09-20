@@ -50,7 +50,7 @@ class Config:
         # Populating .manual[] with 24 entries bypasses the optimizer.
         self.save = Holder("401(k) savings")
         self.save.percent_match = 6  # Employee match percent
-        self.save.percent_pre = Holder("Post-tax percentages")
+        self.save.percent_pre = Holder("Pre-tax percentages")
         self.save.percent_pre.start = 0
         self.save.percent_pre.increase = 0
         self.save.percent_pre.manual = []
