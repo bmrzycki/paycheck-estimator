@@ -14,38 +14,37 @@ class Savings:
     1 cent over.
 
     The optimizer can be re-run as the year progresses to help rebalance as
-    numbers become more concrete: RSU vest prices, salary increase %.
+    numbers become more concrete during the year: salary increase, actual
+    rebalancing dates, etc.
 
     Ground rules for the optimizer:
       * Payments across boundaries can only change by 1% to best smooth
         changes over the year and keep net pay as constant as possible.
       * As frugal a number of changes as possible. The optimizer supports
         at most 3 (start, increase, tweak) but also tests for the case
-        when all 2 or 3 are the same. Changes take time to propgate online
-        and changing across multiple pay period windows  will likely cause
+        when 2 or all 3 are the same. Changes take time to propgate online
+        and changing across multiple pay period windows can cause timing
         problems.
       * Always contribute as close to the cap. This is a sound financial
-        strategy and also ensures employer matching for pre-tax.
+        strategy and also ensures employer matching for pre-tax without a
+        true-up event (not guaranteed).
 
     The change intervals:
       * start    : The rate at the start of the year until the first paycheck
-                   with the employees salary increase. We add one final pay
-                   period to this interval to give the employee time to verify
-                   the new numbers and react.
+                   with the employees salary increase.
       * increase : The rate after salary increase takes place to TODAY.
       * tweak    : A sweep of all remaining pay-periods from TODAY to the end
                    of the year.
 
     TODAY in this context refers to the day the program is executed. Any pay
-    periods within 7 calendar days of TODAY are considered too close to alter
-    and are treated as part of the increase interval.
+    periods within tweak_limit calendar days of TODAY are considered too
+    close to alter and are treated as part of the increase interval.
     """
 
-    def __init__(self, cfg, income_list):
+    def __init__(self, cfg, income_list, tweak_limit=7):
         self.cfg = cfg
         self.income = income_list
-        # It takes about a week for contribution changes to take effect.
-        self.tweak_date = self.cfg.today() + timedelta(days=7)
+        self.tweak_date = self.cfg.today() + timedelta(days=tweak_limit)
 
         # increase_rob shifts when we switch between start of year vs the
         # change in pay increase.

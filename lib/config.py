@@ -39,17 +39,12 @@ class Config:
         self.income.rsu = []
         self.income.supplimental = []
 
-        # 401(k) contribution optimizer:
-        #   start     The start of the year until the pay raise increase plus
-        #             one additional pay period to allow for time to view the
-        #             real paystub of the increase. It also gives time to alter
-        #             the contribution rate, which usually takes a week.
-        #   increase  1+ pay periods after the start period.
-        #
-        # Set to 0 to auto-optimize, > 0 to lock a value.
-        # Populating .manual[] with 24 entries bypasses the optimizer.
+        # 401(k) contribution optimizer. See docstring for Savings() in
+        # savings.py for details and variable meanings and strategy. Set
+        # *.start/*.increase to 0 to auto-optimize, > 0 to lock a value.
+        # Populating .manual[] with 24 ints bypasses a pre/post optimizer.
         self.save = Holder("401(k) savings")
-        self.save.percent_match = 6  # Employee match percent
+        self.save.percent_match = 6  # Employer match percent
         self.save.percent_pre = Holder("Pre-tax percentages")
         self.save.percent_pre.start = 0
         self.save.percent_pre.increase = 0
