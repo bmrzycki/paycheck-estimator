@@ -24,13 +24,14 @@ my_pylint() {
 
 cd "$base" || err "cd $base"
 
-# Check code as a blob
+# Program code
 export PYTHONPATH="$base/lib"
 my_black estimator.py lib/*.py
 my_pylint estimator.py lib/*.py
 
+# Configs
 export PYTHONPATH="$base"
-for py in $(ls -1 2?/config.py example.py 2>/dev/null); do
+for py in $(ls -1 2?/config.py config/config.py 2>/dev/null); do
     my_black "$py"
     my_pylint "$py"
 done
