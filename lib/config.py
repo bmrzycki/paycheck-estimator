@@ -30,10 +30,8 @@ class Config:
         # made a boo boo. Start the year with a net offset if necessary
         self.pay.start_net_fudge = 0.0
         # When an RSU price isn't specified use this default. When None
-        # today's current price is fetched online using the this symbol and
-        # this website url.
+        # today's current price is fetched online using the this url.
         self.rsu_price = None
-        self.rsu_symbol = ""
         self.rsu_url = ""
         self.income = Holder("Non-salaried income")
         self.income.rsu = []
@@ -107,9 +105,9 @@ class Config:
         if price is None:
             price = self.rsu_price
             if price is None:
-                if not self.rsu_url or not self.rsu_symbol:
-                    error("missing stock url or symbol")
-                price = Stock(self.rsu_url).price(self.rsu_symbol)
+                if not self.rsu_url:
+                    error("missing stock url")
+                price = Stock(self.rsu_url).price()
         price = float(price)
         # Prior vests have shown it takes about a week between the vest date
         # and receiving a paystub. Add 7 to day to reflect that.

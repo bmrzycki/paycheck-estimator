@@ -13,7 +13,7 @@ _BASE = Path(__file__).parent.resolve()
 
 
 class _Parser(HTMLParser):
-    "Supports Stock class in parsing online HTML for a stock price."
+    "Supports Stock class in parsing online HTML for a stock url."
 
     def handle_starttag(self, tag, attrs):
         "subclass, finds last price"
@@ -36,34 +36,34 @@ class Stock:
         self.cache = _BASE.parent / f"{cache_name}.json"
         self.cache_hours = cache_hours
 
-    def _cached(self, symbol, data=None):
+    def _cached(self, data=None):
         if isinstance(data, dict):
             json = json_dumps(data, sort_keys=True, indent=2) + "\n"
             self.cache.write_text(json, encoding="utf-8")
         if not self.cache.is_file():
             return None, None
         raw = json_loads(self.cache.read_text("utf-8"))
-        if raw["symbol"] != symbol:
+        if raw["url"] != self.url:
             return None, None
         time_utc = datetime(*raw["time_utc"], tzinfo=UTC)
         cache_limit = time_utc + timedelta(hours=self.cache_hours)
-        if cache_limit < datetime.now(UTC):
+        if datetime.now(UTC) > cache_limit:
             return None, None
         return time_utc, raw["price"]
 
-    def price_dict(self, symbol):
-        "Return a dict for symbol"
-        time_utc, price = self._cached(symbol)
+    def price_dict(self):
+        "Return a price dict"
+        time_utc, price = self._cached()
         update_cache = False
         if not isinstance(price, float):
             time_utc = datetime.now(UTC)
             update_cache = True
             parser = _Parser()
-            with request.urlopen(f"{self.url}/{symbol}") as url:
+            with request.urlopen(self.url) as url:
                 parser.feed(url.read().decode("utf-8"))
                 price = parser.last_price()
             if price is None:
-                error(f"can't get stock symbol '{symbol}'")
+                error(f"can't get stock '{self.url}'")
 
         data = {
             "time_utc": [
@@ -74,13 +74,13 @@ class Stock:
                 time_utc.minute,
                 time_utc.second,
             ],
-            "symbol": symbol,
+            "url": self.url,
             "price": price,
         }
         if update_cache:
-            self._cached(symbol, data)
+            self._cached(data)
         return data
 
-    def price(self, symbol):
-        "Returns a price for a symbol"
-        return self.price_dict(symbol)["price"]
+    def price(self):
+        "Returns a price"
+        return self.price_dict()["price"]
