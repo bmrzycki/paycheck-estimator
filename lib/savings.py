@@ -47,11 +47,10 @@ class Savings:
         # It takes about a week for contribution changes to take effect.
         self.tweak_date = self.cfg.today() + timedelta(days=7)
 
-        # "Rob" one increase pay period for the start pay period to allow for
-        # the time it takes to get the first post-increase paycheck and submit
-        # the change to the contribution percentage.
-        self.paychecks_start = 1
-        self.paychecks_increase = -1
+        # increase_rob shifts when we switch between start of year vs the
+        # change in pay increase.
+        self.paychecks_start = cfg.save.increase_rob
+        self.paychecks_increase = -cfg.save.increase_rob
         self.paychecks_tweak = 0
 
         # Contributions only apply to regular salary paychecks. Collect them
@@ -62,7 +61,7 @@ class Savings:
                 if income.date < self.cfg.pay.increase.start_date:
                     self.paychecks_start += 1
                 elif self.paychecks_increase < 0:
-                    # We want at least 1 pay-period for the increase.
+                    # Require at least 1 pay-period for increase.
                     self.paychecks_increase += 1
                 elif income.date >= self.tweak_date:
                     self.paychecks_tweak += 1
