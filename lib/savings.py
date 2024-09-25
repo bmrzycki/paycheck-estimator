@@ -171,8 +171,6 @@ class Savings:
         """
         manual, start_list, increase, cap = self._setup(suffix)
         if manual:
-            if len(manual) != len(self.salary):
-                error(f"bad manual contrib list length {manual}")
             return manual
         best, best_amount = None, None
         for start_tuple in start_list:
