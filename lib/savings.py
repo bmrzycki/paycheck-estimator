@@ -67,17 +67,16 @@ class Savings:
                 else:
                     self.paychecks_increase += 1
                 self.salary.append(income)
-        self.paychecks_total = (
-            self.paychecks_start
-            + self.paychecks_increase
-            + self.paychecks_tweak
-        )
+        self.paychecks_total = self.paychecks_start
+        self.paychecks_total += self.paychecks_increase
+        self.paychecks_total += self.paychecks_tweak
         if self.paychecks_total != len(self.salary):
             error("wrong paycheck count")
         self.cap_pre = float(self.cfg.save.cap_pre)
         self.cap_post = self.cfg.save.cap - self.cap_pre
 
         # Calculate pre-tax contributions. MUST BE DONE FIRST!
+        percent_match = self.cfg.save.percent_match / 100.0
         self.best_pre = self._opt("pre")
         ytd_left = self.cap_pre
         for index, income in enumerate(self.salary):
@@ -85,11 +84,10 @@ class Savings:
             contrib = income.gross * income.percent_401k
             income.contrib_401k = min(contrib, ytd_left)
             ytd_left -= income.contrib_401k
-            contrib_match = income.gross * (
-                self.cfg.save.percent_match / 100.0
-            )
+            contrib_match = income.gross * percent_match
             income.contrib_401k_match = min(contrib_match, income.contrib_401k)
             self.cap_post -= income.contrib_401k_match  # Adjust for post-tax
+
         # Calculate post-tax contributions. MUST BE DONE SECOND!
         self.best_post = self._opt("post")
         ytd_left = self.cap_post
@@ -98,6 +96,7 @@ class Savings:
             contrib = income.gross * income.percent_401k_post
             income.contrib_401k_post = min(contrib, ytd_left)
             ytd_left -= income.contrib_401k_post
+
         self._ytd()
 
     def _ytd(self):
