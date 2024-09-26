@@ -19,6 +19,7 @@ my_pylint() {
 	--disable=too-few-public-methods \
 	--disable=too-many-arguments \
 	--disable=duplicate-code \
+	--disable=too-many-positional-arguments \
 	"$@" || err "pylint $@"
 }
 
