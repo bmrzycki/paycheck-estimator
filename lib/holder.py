@@ -1,10 +1,16 @@
 "Basic holder"
 
+from os import get_terminal_size
 from pprint import pformat
 from textwrap import fill
 
 
-def _pretty(obj, indent=0, max_line_len=100):
+def _pretty(obj, indent=0, max_line_len=None):
+    if max_line_len is None:
+        try:
+            max_line_len = get_terminal_size().columns
+        except OSError:  # pipes, non-terminals, etc.
+            max_line_len = 100
     if type(obj) in (list, tuple, dict):
         val = pformat(obj)
     else:
