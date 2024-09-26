@@ -54,7 +54,7 @@ class Federal:
         #   37%  >= 1,000,000.00
         # When a payment crosses the cap the gross pay is split into two
         # 22% and 37% taxable portions.
-        percent_lo, percent_hi, cap = 0.22, 0.37, 999_999.99
+        percent_lo, percent_hi, cap = 0.22, 0.37, 1_000_000.0
         if ytd_gross + income.gross <= cap:
             return income.gross * percent_lo, percent_lo  # All pre-cap
         if ytd_gross > cap:
