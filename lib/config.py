@@ -53,8 +53,8 @@ class Config:
         self.save.percent_post.manual = []
         # "Robs" N pay periods before the increase optimization occurs. This
         # gives the employee some time before deciding to alter the contrib
-        # rates after receiving the changed paycheck(s). Default is 1.
-        self.save.increase_rob = 1
+        # rates after receiving the changed paycheck(s). Default is 0.
+        self.save.increase_rob = 0
 
         self.federal = Holder("Federal tax")
         self.medicare = Holder("Medicare tax")
