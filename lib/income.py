@@ -145,6 +145,7 @@ class Income:
         s = "Income("
         s += f"date={self.date.strftime('%D')}"
         s += f", gross=${self.gross:,.2f}"
+        s += f", kind={self.kind}"
         if self.rsu_quantity:
             s += f", rsu_quantity={self.rsu_quantity:,.2f}"
         if self.percent_tax_federal:
