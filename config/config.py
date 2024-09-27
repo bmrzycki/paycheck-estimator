@@ -7,6 +7,7 @@ class Config(BaseConfig):
     "User configuration"
 
     def config(self):
+        self.filename = __file__
         self.year = 2024
         self.pay.gross = 4_000.0
         self.pay.increase.percent = 2.0
@@ -19,4 +20,3 @@ class Config(BaseConfig):
         ]
         self.save.cap = 69_000.0
         self.save.cap_pre = 23_000.0
-        self.filename = __file__
