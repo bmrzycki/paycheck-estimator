@@ -11,7 +11,9 @@ def _pretty(obj, indent=0, max_line_len=None):
             max_line_len = get_terminal_size().columns
         except OSError:  # pipes, non-terminals, etc.
             max_line_len = 100
-    if type(obj) in (list, tuple, dict):
+    if isinstance(obj, float):
+        val = f"{obj:,}"
+    elif type(obj) in (list, tuple, dict):
         val = pformat(obj)
     else:
         val = str(obj)
