@@ -28,6 +28,7 @@ class Config:
         self.pay.medical = 0.0
         self.pay.dental = 0.0
         self.pay.vision = 0.0
+        self.pay.vacation_buy = 0.0
         self.pay.increase = Holder("Regular pay increase")
         self.pay.increase.start_date = None
         # Sometimes things happen and money comes to you because the company
