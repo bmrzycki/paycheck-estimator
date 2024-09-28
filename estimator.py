@@ -10,8 +10,6 @@ from sys import path as sys_path
 from lib.log import warn
 from lib.pay import Pay
 
-BASE = Path(__file__).parent.resolve()
-
 
 def main():
     "The main routine."
@@ -40,7 +38,10 @@ def main():
         help="directory containing config.py",
     )
     args = parser.parse_args()
-    args.config = Path(args.config_dir[0]).resolve() / "config.py"
+    config_dir = args.config_dir[0]
+    if config_dir.endswith("/config.py"):
+        config_dir = config_dir.removesuffix("/config.py")
+    args.config = Path(config_dir).resolve() / "config.py"
     if not args.config.is_file():
         parser.error(f"can't find config '{args.config}'")
 
