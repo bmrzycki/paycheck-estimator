@@ -1,9 +1,9 @@
 "Pay income generator, where everything merges and finalizes."
 
 from pathlib import Path
-from subprocess import run, PIPE
 
 from federal import Federal
+from git import repo_version
 from log import info, error, verbose_level
 from medicare import Medicare
 from salary import Salary
@@ -125,13 +125,7 @@ class Pay:
 
     def csv_info(self):
         "Returns info as an array of CSV strings"
-        result = run(
-            ["git", "describe", "--always", "--long", "--dirty", "--tags"],
-            cwd=_BASE,
-            stdout=PIPE,
-            check=True,
-        )
-        git_ver = result.stdout.decode("utf-8").split("\n")[0]
+        version = repo_version(_BASE)
         save = self.cfg.save
         manual_pre = bool(save.percent_pre.manual)
         manual_post = bool(save.percent_post.manual)
@@ -139,7 +133,7 @@ class Pay:
         return [
             "Estimator key,Value",
             f"Created,{self.cfg.today().strftime('%D')}",
-            f"Git version,{git_ver}",
+            f"Version,{version}",
             f"Year,{self.cfg.year}",
             f"Salary increase percent,{self.cfg.pay.increase.percent}",
             f"Salary increase start,{increase_start}",
@@ -151,4 +145,5 @@ class Pay:
             f"401(k) post-tax start percent,{save.percent_post.start}",
             f"401(k) post-tax increase percent,{save.percent_post.increase}",
             f"401(k) post-tax manual mode,{manual_post}",
+            f"CFG version,{self.cfg.version}",
         ]

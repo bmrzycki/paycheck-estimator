@@ -1,8 +1,9 @@
 "Base User Config"
 
-from pathlib import Path
 from datetime import datetime, UTC
+from pathlib import Path
 
+from git import repo_version
 from holder import Holder
 from income import Income
 from log import error
@@ -14,6 +15,7 @@ class Config:
 
     def __init__(self):
         self.filename = __file__
+        self.version = None
         self.country = "us"
         self._holidays = set()
         self.year = datetime.now(UTC).year
@@ -99,6 +101,8 @@ class Config:
             error("401(k) total cap required")
         if not self.save.cap_pre:
             error("401(k) pre-tax cap required")
+        if self.version is None:
+            self.version = repo_version(self.filename.parent)
 
     def config(self):
         "Overwritten by child class to setup attributes"
