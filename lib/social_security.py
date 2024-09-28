@@ -17,6 +17,7 @@ class SocialSecurity:
                 amount -= income.dental
                 amount -= income.medical
                 amount -= income.vision
+                amount -= income.vacation_buy
             tax = amount * percent
             if tax + ytd > amount_max:
                 tax = amount_max - ytd

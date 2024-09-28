@@ -64,6 +64,7 @@ class Pay:
             "ytd_medical": 0.0,
             "ytd_dental": 0.0,
             "ytd_vision": 0.0,
+            "ytd_vacation_buy": 0.0,
         }
         for income in self.income:
             income.deductions = income.contrib_401k
@@ -72,6 +73,7 @@ class Pay:
             income.deductions += income.medical
             income.deductions += income.dental
             income.deductions += income.vision
+            income.deductions += income.vacation_buy
             income.federal_taxable = income.gross - income.deductions
             for ytd_attr in ytd:
                 attr = ytd_attr.removeprefix("ytd_")

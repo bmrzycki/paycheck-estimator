@@ -62,6 +62,8 @@ class Income:
             ("ytd_rsu_quantity_vested", "RSU Quantity Vested YTD"),
             ("ytd_rsu_quantity_remaining", "RSU Quantity Remaining YTD"),
             ("rsu_vest_price", "RSU Vest Price"),
+            ("vacation_buy", "Vacation buy"),
+            ("ytd_vacation_buy", "Vacation buy YTD"),
         ]
         for attr, title in self._attrs:
             if "," in title:
@@ -90,6 +92,7 @@ class Income:
         self.net -= self.medical
         self.net -= self.dental
         self.net -= self.vision
+        self.net -= self.vacation_buy
         self._validate()
 
     def _validate(self):

@@ -18,6 +18,7 @@ class Medicare:
                 amount -= income.dental
                 amount -= income.medical
                 amount -= income.vision
+                amount -= income.vacation_buy
             amount_surtax = max(ytd_gross + amount - cap, 0.0)
             amount_surtax = min(amount_surtax, amount)
             ytd_gross += amount
