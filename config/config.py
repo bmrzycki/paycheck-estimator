@@ -25,13 +25,13 @@ class Config(BaseConfig):
         # 2024: IRS Publication 15-T for SINGLE Persons
         self.federal.personal_exemption = 8_600.00  # W4 2019
         self.federal.table = [  # SEMIMONTHLY Paytool Period
-            (250.0, 10),
-            (733.0, 12),
-            (2_215.0, 22),
-            (4_439.0, 24),
-            (8_248.0, 32),
-            (10_405.0, 35),
-            (25_640.0, 37),
+            (250, 10),
+            (733, 12),
+            (2_215, 22),
+            (4_439, 24),
+            (8_248, 32),
+            (10_405, 35),
+            (25_640, 37),
         ]
         self.medicare.percent = 1.45
         self.medicare.surtax_cap = 200_000.0

@@ -9,8 +9,9 @@ class Federal:
         self.income = income_list
         self.table = []
         for income, percent in cfg.federal.table:
-            # Convert readable percentages into calculatable ones
-            self.table.append((income, percent / 100.0))
+            if percent > 1.0:
+                percent /= 100.0
+            self.table.append((float(income), percent))
         # NOTE: table must be reverse sorted for ._tax_salary()
         self.table = sorted(self.table, reverse=True)
 
