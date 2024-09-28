@@ -18,5 +18,24 @@ class Config(BaseConfig):
         self.income.supplimental = [  # month, day, gross, kind, fed_tax%
             self.supplimental(5, 31, 5_000.0, "bonus"),
         ]
+
+        # 2024: IRS 401(k) caps without catchup (aged 49 or younger)
         self.save.cap = 69_000.0
         self.save.cap_pre = 23_000.0
+
+        # 2024: IRS Publication 15-T for SINGLE Persons
+        self.federal.personal_exemption = 8_600.00  # W4 2019
+        self.federal.table = [  # SEMIMONTHLY Paytool Period
+            (250.0, 10),
+            (733.0, 12),
+            (2_215.0, 22),
+            (4_439.0, 24),
+            (8_248.0, 32),
+            (10_405.0, 35),
+            (25_640.0, 37),
+        ]
+        self.medicare.percent = 1.45
+        self.medicare.surtax_cap = 200_000.0
+        self.medicare.surtax_percent = 0.9
+        self.social_security.percent = 6.2
+        self.social_security.cap = 168_600.0

@@ -32,7 +32,7 @@ class Config:
         # When an RSU price isn't specified use this default. When None
         # today's current price is fetched online using the this url.
         self.rsu_price = None
-        self.rsu_url = ""
+        self.rsu_url = ""  # Child must provide
         self.income = Holder("Non-salaried income")
         self.income.rsu = []
         self.income.supplimental = []
@@ -43,6 +43,8 @@ class Config:
         # Populating .manual[] with 24 ints bypasses a pre/post optimizer.
         self.save = Holder("401(k) savings")
         self.save.percent_match = 6  # Employer match percent
+        self.save.cap = 0  # Child must provide
+        self.save.cap_pre = 0  # Child must provide
         self.save.percent_pre = Holder("Pre-tax percentages")
         self.save.percent_pre.start = 0
         self.save.percent_pre.increase = 0
@@ -56,34 +58,47 @@ class Config:
         # rates after receiving the changed paycheck(s). Default is 0.
         self.save.increase_rob = 0
 
+        # Mandatory tax information which the child must provide. Set all to
+        # invalid values for early detection of a bad config. The employee
+        # must set this based on their filing status, age (401k cap), and the
+        # tax year. It's recommended to use IRS Publication 15-T.
         self.federal = Holder("Federal tax")
         self.medicare = Holder("Medicare tax")
         self.social_security = Holder("Social Security tax")
-        # Tax information from IRS Publication 15-T
-        self.federal.personal_exemption = 8_600.00  # W4 2019 SINGLE Persons
-        self.federal.table = [  # SEMIMONTHLY Paytool Period: SINGLE Persons
-            (250.0, 10),
-            (733.0, 12),
-            (2_215.0, 22),
-            (4_439.0, 24),
-            (8_248.0, 32),
-            (10_405.0, 35),
-            (25_640.0, 37),
-        ]
-        self.medicare.percent = 1.45
-        self.medicare.surtax_cap = 200_000.0
-        self.medicare.surtax_percent = 0.9
-        self.social_security.percent = 6.2
-        self.social_security.cap = 168_600.0
+        self.federal.personal_exemption = 0  # the W4 2019 personal exemption
+        self.federal.table = []  # Use the SEMIMONTHLY Paytool Period
+        self.medicare.percent = 0
+        self.medicare.surtax_cap = 0
+        self.medicare.surtax_percent = 0
+        self.social_security.percent = 0
+        self.social_security.cap = 0
 
-        # Call the child's config method.
+        # Call the child's config method and validate internal state.
         self.config()
+        self._validate()
 
-        # Settings which must react to the child settings are below.
+    def _validate(self):
         self.filename = Path(self.filename).resolve()
         if self.pay.increase.start_date is None:
-            # Child didn't set, use the default.
-            self.pay.increase.start_date = self.day(4, 1)
+            self.pay.increase.start_date = self.day(4, 1)  # Default: April 1
+        if not self.federal.personal_exemption:
+            error("federal personal_exemption required")
+        if not self.federal.table:
+            error("federal semimonthly paytool period table required")
+        if not self.medicare.percent:
+            error("medicare tax percent required")
+        if not self.medicare.surtax_cap:
+            error("medicare surtax cap required")
+        if not self.medicare.surtax_percent:
+            error("medicare surtax percent required")
+        if not self.social_security.percent:
+            error("social security tax percent required")
+        if not self.social_security.cap:
+            error("social security cap required")
+        if not self.save.cap:
+            error("401(k) total cap required")
+        if not self.save.cap_pre:
+            error("401(k) pre-tax cap required")
 
     def config(self):
         "Overwritten by child class to setup attributes"
