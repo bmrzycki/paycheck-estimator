@@ -13,8 +13,10 @@ from stock import Stock
 class Config:
     "User configuration"
 
-    def __init__(self):
-        self.filename = __file__
+    def __init__(self, filename=None):
+        if filename is None:
+            filename = __file__
+        self.filename = Path(filename).resolve()
         self.version = None
         self.country = "us"
         self._holidays = set()
@@ -80,7 +82,6 @@ class Config:
         self._validate()
 
     def _validate(self):
-        self.filename = Path(self.filename).resolve()
         if self.pay.increase.start_date is None:
             self.pay.increase.start_date = self.day(4, 1)  # Default: April 1
         if not self.federal.personal_exemption:

@@ -50,7 +50,7 @@ def main():
     sys_path.insert(0, str(args.config.parent))
     from config import Config  # pylint: disable=import-outside-toplevel
 
-    pay = Pay(Config(), args.verbose)
+    pay = Pay(Config(args.config), args.verbose)
     if args.pay_periods:
         print("\n".join(pay.pay_periods()))
     else:
