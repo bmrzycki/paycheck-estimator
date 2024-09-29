@@ -5,7 +5,7 @@ class Medicare:
     "Medicare tax"
 
     def __init__(self, cfg, income_list):
-        cap = float(cfg.medicare.surtax_cap) - 0.01
+        cap = float(cfg.medicare.surtax_cap)
         percent = cfg.medicare.percent / 100.0
         percent_surtax = cfg.medicare.surtax_percent / 100.0
         ytd = ytd_surtax = ytd_gross = 0.0
