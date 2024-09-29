@@ -18,8 +18,8 @@ class Savings:
     rebalancing dates, etc.
 
     Ground rules for the optimizer:
-      * Payments across boundaries can only change by 1% to best smooth
-        changes over the year and keep net pay as constant as possible.
+      * Payments across boundaries can only change by a small percent to best
+        smooth changes over the year and keep net pay as constant as possible.
       * As frugal a number of changes as possible. The optimizer supports
         at most 3 (start, increase, tweak) but also tests for the case
         when 2 or all 3 are the same. Changes take time to propgate online
@@ -41,7 +41,7 @@ class Savings:
     close to alter and are treated as part of the increase interval.
     """
 
-    def __init__(self, cfg, income_list, tweak_limit=7):
+    def __init__(self, cfg, income_list, change=1, tweak_limit=7):
         self.cfg = cfg
         self.income = income_list
         self.tweak_date = self.cfg.today() + timedelta(days=tweak_limit)
@@ -51,6 +51,10 @@ class Savings:
         self.paychecks_start = cfg.save.increase_rob
         self.paychecks_increase = -cfg.save.increase_rob
         self.paychecks_tweak = 0
+
+        # The maximum change percentage amount across boundaries. This is best
+        # if it's kept small (1 or 2 percent is recommended).
+        self.change = change
 
         # Contributions only apply to regular salary paychecks. Collect them
         # here for analysis and contribution optimization.
@@ -129,14 +133,16 @@ class Savings:
             if holder.increase != 0:
                 error("invalid auto-config start and increase")
             # User wants auto for the start of the year. To best fit we try
-            # a -1/0/+1 tuple for both the floor and the ceiling of the
+            # a self.change iter for both the floor and the ceiling of the
             # optimal contribution rate. We select the gross salary for a
             # conservative guess of no salary increase (0%).
             gross_no_increase = self.salary[0].gross * len(self.salary)
             start_list = []
             for func in floor, ceil:
                 percent = func(cap / gross_no_increase * 100.0)
-                start_list.append((percent - 1, percent, percent + 1))
+                start_list.append(
+                    range(percent - self.change, percent + self.change + 1)
+                )
         return [], start_list, holder.increase, cap
 
     def _attempts(self, start_tuple, increase_user):
@@ -150,9 +156,13 @@ class Savings:
         for start in start_tuple:
             increase_tuple = (increase_user,)
             if increase_user == 0:
-                increase_tuple = (start - 1, start, start + 1)
+                increase_tuple = range(
+                    start - self.change, start + self.change + 1
+                )
             for increase in increase_tuple:
-                for tweak in (increase - 1, increase, increase + 1):
+                for tweak in range(
+                    increase - self.change, increase + self.change + 1
+                ):
                     for count_tweak in range(0, self.paychecks_tweak):
                         final = [start] * self.paychecks_start
                         final += [increase] * (count_rest - count_tweak)
