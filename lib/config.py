@@ -31,9 +31,9 @@ class Config:
         self.pay.vacation_buy = 0.0
         self.pay.increase = Holder("Regular pay increase")
         self.pay.increase.start_date = None
-        # Sometimes things happen and money comes to you because the company
-        # made a boo boo. Start the year with a net offset if necessary
-        self.pay.start_net_fudge = 0.0
+        # Sometimes things happen and the company makes a mistake. Set to a
+        # float to alter the net income's first paychek.
+        self.pay.start_net_fudge = None
         # When an RSU price isn't specified use this default. When None
         # today's current price is fetched online using the this url.
         self.rsu_price = None
@@ -58,10 +58,10 @@ class Config:
         self.save.percent_post.start = 0
         self.save.percent_post.increase = 0
         self.save.percent_post.manual = []
-        # "Robs" N pay periods before the increase optimization occurs. This
+        # Shift N pay periods before the increase optimization occurs. This
         # gives the employee some time before deciding to alter the contrib
         # rates after receiving the changed paycheck(s). Default is 0.
-        self.save.increase_rob = 0
+        self.save.increase_shift = 0
 
         # Mandatory tax information which the child must provide. Set all to
         # invalid values for early detection of a bad config. The employee

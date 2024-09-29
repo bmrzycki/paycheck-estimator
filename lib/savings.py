@@ -46,10 +46,9 @@ class Savings:
         self.income = income_list
         self.tweak_date = self.cfg.today() + timedelta(days=tweak_limit)
 
-        # increase_rob shifts when we switch between start of year vs the
-        # change in pay increase.
-        self.paychecks_start = cfg.save.increase_rob
-        self.paychecks_increase = -cfg.save.increase_rob
+        # Shifts when switching between start of year vs pay increase.
+        self.paychecks_start = cfg.save.increase_shift
+        self.paychecks_increase = -cfg.save.increase_shift
         self.paychecks_tweak = 0
 
         # The maximum change percentage amount across boundaries. This is best

@@ -81,13 +81,13 @@ class Pay:
 
     def _net(self):
         ytd_net = ytd_net_supplimental = 0.0
-        net_fudge = self.cfg.pay.start_net_fudge
+        fudge = self.cfg.pay.start_net_fudge
         for income in self.income:
             income.calc_net()
             if income.kind == "salary":
-                if net_fudge > 0.0:
-                    income.net += net_fudge
-                    net_fudge = 0.0
+                if isinstance(fudge, float):
+                    income.net += fudge
+                    fudge = None
                 ytd_net += income.net
             else:
                 ytd_net_supplimental += income.net
