@@ -83,8 +83,12 @@ class Config:
         self._validate()
 
     def _validate(self):
+        # Set the pay increase start_date now because it's depenenent on what
+        # the child sets self.year to, defaults to April 1, self.year.
         if self.pay.increase.start_date is None:
-            self.pay.increase.start_date = self.day(4, 1)  # Default: April 1
+            self.pay.increase.start_date = self.day(4, 1)
+        if self.version is None:
+            self.version = repo_version(self.filename.parent)
         if not self.federal.personal_exemption:
             error("federal personal_exemption required")
         if not self.federal.table:
@@ -103,8 +107,14 @@ class Config:
             error("401(k) total cap required")
         if not self.save.cap_pre:
             error("401(k) pre-tax cap required")
-        if self.version is None:
-            self.version = repo_version(self.filename.parent)
+        # Make sure certain fields are floats before starting computations.
+        self.federal.personal_exemption = float(
+            self.federal.personal_exemption
+        )
+        self.social_security.cap = float(self.social_security.cap)
+        self.medicare.surtax_cap = float(self.medicare.surtax_cap)
+        self.save.cap = float(self.save.cap)
+        self.save.cap_pre = float(self.save.cap_pre)
 
     def config(self):
         "Overwritten by child class to setup attributes"
