@@ -133,16 +133,9 @@ class Income:
         return ",".join(header), ",".join(values)
 
     def __lt__(self, obj):
+        # This is implemented to make sorting lists of income objects into
+        # the order they would be paid.
         return self.date < obj.date
-
-    def __le__(self, obj):
-        return self.date <= obj.date
-
-    def __gt__(self, obj):
-        return self.date > obj.date
-
-    def __ge__(self, obj):
-        return self.date > obj.date
 
     def __repr__(self):
         s = "Income("
