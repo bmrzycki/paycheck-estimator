@@ -102,15 +102,14 @@ class Savings:
     def _ytd(self):
         "Adds 401k final ytd values to all salaried incomes"
         ytd = ytd_match = ytd_post = 0.0
-        for income in self.income:
-            if income.kind == "salary":
-                ytd += income.contrib_401k
-                ytd_match += income.contrib_401k_match
-                ytd_post += income.contrib_401k_post
-                income.ytd_401k = ytd
-                income.ytd_401k_match = ytd_match
-                income.ytd_401k_post = ytd_post
-                income.ytd_401k_total = ytd + ytd_match + ytd_post
+        for income in self.salary:
+            ytd += income.contrib_401k
+            ytd_match += income.contrib_401k_match
+            ytd_post += income.contrib_401k_post
+            income.ytd_401k = ytd
+            income.ytd_401k_match = ytd_match
+            income.ytd_401k_post = ytd_post
+            income.ytd_401k_total = ytd + ytd_match + ytd_post
 
     def _setup(self, suffix):
         """
