@@ -155,7 +155,7 @@ class Config:
         return datetime(now.year, now.month, now.day, tzinfo=UTC)
 
     def bank_holiday(self, day):
-        "Returns true of datetime day is a bank holiday"
+        "Returns true if datetime day is a bank holiday"
         if self.country != "us":
             error("only supports US bank holidays")
         # https://www.chicagofed.org/utilities/about-us/bank-holidays
