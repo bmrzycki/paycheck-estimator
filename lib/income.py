@@ -107,6 +107,12 @@ class Income:
                 "contrib_401k",
                 "contrib_401k_post",
                 "contrib_401k_match",
+                "fsa",
+                "hsa",
+                "medical",
+                "dental",
+                "vision",
+                "vacation_buy",
             ):
                 if getattr(self, attr) > 0.0:
                     error(f"Income '{attr}' > 0.0")
