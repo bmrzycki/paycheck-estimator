@@ -17,11 +17,13 @@ class Salary:
 
     def __iter__(self):
         friday = 4  # datetime.weekday() -> 0 is Monday, 6 is Sunday
+        # Salary is paid 24 times a year, what the IRS calls "semimonthly",
+        # on the 15th and last day of the month. All dates are pulled back to
+        # the previous day when the payday is a bank holiday. Finally, all
+        # dates are pulled back to Friday if the payday falls on a weekend.
+        # The federal exemption is split evenly across all paychecks.
+        exemption = self.cfg.federal.personal_exemption / 24.0
         for month in range(1, 13):
-            # Salary is paid 24 times a year, what the IRS refers to as
-            # "semimonthly", on the 15th and last day of the month. When the
-            # date is a weekend it's pulled back to the previous Friday. All
-            # dates are pulled back when payday falls on a bank holiday.
             for day in (15, monthrange(self.cfg.year, month)[1]):
                 date = self.cfg.day(month, day)
                 # Adjust bank holidays first: may move paydate to a weekend
@@ -34,6 +36,7 @@ class Salary:
                 if date >= self.cfg.pay.increase.start_date:
                     gross = self.post_increase
                 income = Income(date, gross, "salary")
+                income.personal_exemption = exemption
                 income.term_life = float(self.cfg.pay.term_life)
                 income.hsa = float(self.cfg.pay.hsa)
                 income.fsa = float(self.cfg.pay.fsa)

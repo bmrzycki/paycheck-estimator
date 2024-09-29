@@ -25,7 +25,6 @@ class Pay:
         )
         self._ytd_gross()
         # ^^^ Creates several YTD values for income
-        self._personal_exemption()
         Savings(cfg, self.income)
         # ^^^ Federal deductions must come AFTER 401(k) calculations
         self._federal_deductions()
@@ -95,12 +94,6 @@ class Pay:
             income.ytd_net = ytd_net
             income.ytd_net_supplimental = ytd_net_supplimental
             income.ytd_net_total = ytd_net + ytd_net_supplimental
-
-    def _personal_exemption(self):
-        exemption = self.cfg.federal.personal_exemption / 24.0
-        for income in self.income:
-            if income.kind == "salary":
-                income.personal_exemption = exemption
 
     def pay_periods(self):
         "Returns a list of string pay periods (salary)"
