@@ -16,8 +16,10 @@ class _Parser(HTMLParser):
     "Supports Stock class in parsing online HTML for a stock url."
 
     def handle_starttag(self, tag, attrs):
-        "subclass, finds last price"
-        if not hasattr(self, "_last_price") and tag == "div":
+        "finds div attr data-last-price"
+        if hasattr(self, "_last_price"):
+            return
+        if tag == "div":
             for key, value in attrs:
                 if key == "data-last-price":
                     setattr(self, "_last_price", float(value))
@@ -38,8 +40,8 @@ class Stock:
 
     def _cached(self, data=None):
         if isinstance(data, dict):
-            json = json_dumps(data, sort_keys=True, indent=2) + "\n"
-            self.cache.write_text(json, encoding="utf-8")
+            json = json_dumps(data, sort_keys=True, indent=2)
+            self.cache.write_text(f"{json}\n", encoding="utf-8")
         if not self.cache.is_file():
             return None, None
         raw = json_loads(self.cache.read_text("utf-8"))
@@ -82,5 +84,5 @@ class Stock:
         return data
 
     def price(self):
-        "Returns a price"
+        "Returns a float price"
         return self.price_dict()["price"]
