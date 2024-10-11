@@ -144,7 +144,7 @@ class Savings:
                 )
         return [], start_list, holder.increase, cap
 
-    def _attempts(self, start_tuple, increase_user):
+    def _attempts(self, start_iter, increase_user):
         """
         Yields lists of contribution attempts for the entire year of salaried
         pay, all will have the len(self.salary). The routine may produce the
@@ -152,13 +152,13 @@ class Savings:
         and check if we already tried it.
         """
         count_rest = self.paychecks_total - self.paychecks_start
-        for start in start_tuple:
-            increase_tuple = (increase_user,)
+        for start in start_iter:
+            increase_iter = (increase_user,)
             if increase_user == 0:
-                increase_tuple = range(
+                increase_iter = range(
                     start - self.change, start + self.change + 1
                 )
-            for increase in increase_tuple:
+            for increase in increase_iter:
                 for tweak in range(
                     increase - self.change, increase + self.change + 1
                 ):
@@ -181,8 +181,8 @@ class Savings:
         if manual:
             return manual
         best, best_amount = None, None
-        for start_tuple in start_list:
-            for attempt in self._attempts(start_tuple, increase):
+        for start_iter in start_list:
+            for attempt in self._attempts(start_iter, increase):
                 amount = 0.0
                 for index, income in enumerate(self.salary):
                     amount += income.gross * (attempt[index] / 100.0)
