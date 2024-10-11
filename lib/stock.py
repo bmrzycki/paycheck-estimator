@@ -1,6 +1,6 @@
 "Fetch a stock price from online"
 
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
 from html.parser import HTMLParser
 from json import dumps as json_dumps
 from json import loads as json_loads
@@ -47,9 +47,9 @@ class Stock:
         raw = json_loads(self.cache.read_text("utf-8"))
         if raw["url"] != self.url:
             return None, None
-        time_utc = datetime(*raw["time_utc"], tzinfo=UTC)
+        time_utc = datetime(*raw["time_utc"], tzinfo=timezone.utc)
         cache_limit = time_utc + timedelta(hours=self.cache_hours)
-        if datetime.now(UTC) > cache_limit:
+        if datetime.now(timezone.utc) > cache_limit:
             return None, None
         return time_utc, raw["price"]
 
@@ -58,7 +58,7 @@ class Stock:
         time_utc, price = self._cached()
         update_cache = False
         if not isinstance(price, float):
-            time_utc = datetime.now(UTC)
+            time_utc = datetime.now(timezone.utc)
             update_cache = True
             parser = _Parser()
             with request.urlopen(self.url) as url:

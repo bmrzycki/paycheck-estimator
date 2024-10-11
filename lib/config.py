@@ -1,6 +1,6 @@
 "Base User Config"
 
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 from pathlib import Path
 
 from git import repo_version
@@ -20,7 +20,7 @@ class Config:
         self.version = None
         self.country = "us"
         self._holidays = set()
-        self.year = datetime.now(UTC).year
+        self.year = datetime.now(timezone.utc).year
         self.pay = Holder("Regular per-paycheck income")
         self.pay.term_life = 0.0
         self.pay.hsa = 0.0
@@ -157,12 +157,12 @@ class Config:
         "Returns a datetime day object"
         if year is None:
             year = self.year
-        return datetime(year, month, day, tzinfo=UTC)
+        return datetime(year, month, day, tzinfo=timezone.utc)
 
     def today(self):
         "Returns a datetime object for midnight UTC today"
-        now = datetime.now(UTC)
-        return datetime(now.year, now.month, now.day, tzinfo=UTC)
+        now = datetime.now(timezone.utc)
+        return datetime(now.year, now.month, now.day, tzinfo=timezone.utc)
 
     def bank_holiday(self, day):
         "Returns true if datetime day is a bank holiday"
