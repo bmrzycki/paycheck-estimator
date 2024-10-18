@@ -40,10 +40,11 @@ class Pay:
         for income in self.income:
             if income.kind == "rsu":
                 ytd_rsu_quantity_remaining += income.rsu_quantity
-        ytd_gross = ytd_gross_supplimental = 0.0
+        ytd_gross = ytd_gross_supplimental = ytd_withhold = 0.0
         for income in self.income:
             if income.kind == "salary":
                 ytd_gross += income.gross
+                ytd_withhold += income.withhold
             else:
                 if income.kind == "rsu":
                     ytd_rsu_quantity_remaining -= income.rsu_quantity
@@ -52,6 +53,7 @@ class Pay:
             income.ytd_gross = ytd_gross
             income.ytd_gross_supplimental = ytd_gross_supplimental
             income.ytd_gross_total = ytd_gross + ytd_gross_supplimental
+            income.ytd_withhold = ytd_withhold
             income.ytd_rsu_quantity_remaining = ytd_rsu_quantity_remaining
             income.ytd_rsu_quantity_vested = ytd_rsu_quantity_vested
 

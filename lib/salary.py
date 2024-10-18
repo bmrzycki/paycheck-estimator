@@ -44,4 +44,5 @@ class Salary:
                 income.dental = float(self.cfg.pay.dental)
                 income.vision = float(self.cfg.pay.vision)
                 income.vacation_buy = float(self.cfg.pay.vacation_buy)
+                income.withhold = self.cfg.withhold_amount(date)
                 yield income

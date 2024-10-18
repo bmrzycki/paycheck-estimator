@@ -31,6 +31,7 @@ class Config:
         self.pay.vacation_buy = 0.0
         self.pay.increase = Holder("Regular pay increase")
         self.pay.increase.start_date = None
+        self.pay.withhold = []  # Updated with self.withhold()
         # Sometimes things happen and the company makes a mistake. Set to a
         # float to alter the net income's first paychek.
         self.pay.start_net_fudge = None
@@ -118,6 +119,25 @@ class Config:
 
     def config(self):
         "Overwritten by child class to setup attributes"
+
+    def withhold(self, month, day, amount):
+        """
+        Set an amount to withhold starting on month, day until the end of the
+        year. To stop a previous withhold amount call this method again with
+        a later month and day using the amount of 0.
+        """
+        self.pay.withhold.append((self.day(month, day), amount))
+        self.pay.withhold.sort(reverse=True)
+
+    def withhold_amount(self, date):
+        """
+        Returns the float amount to withhold on a salaried paycheck based on
+        datetime object date.
+        """
+        for start_date, amount in self.pay.withhold:
+            if date >= start_date:
+                return float(amount)
+        return 0.0
 
     def supplimental(self, month, day, gross, kind, percent_tax_federal=0.0):
         "Returns a supplimental Income object"

@@ -18,6 +18,13 @@ class Config(BaseConfig):
             self.supplimental(5, 31, 5_000.0, "bonus"),
         ]
 
+        # Withhold $500 per-salaried paycheck from April 1 to June 1, $700
+        # from June 2 to Sept 1, and disable withholdings for the rest of
+        # the calendar year.
+        self.withhold(4, 1, 500)  # start_month, start_day, amount
+        self.withhold(6, 2, 700)
+        self.withhold(9, 2, 0)
+
         # 2024: IRS 401(k) caps without catchup (aged 49 or younger)
         self.save.cap = 69_000.0
         self.save.cap_pre = 23_000.0
