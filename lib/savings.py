@@ -3,7 +3,7 @@
 from datetime import timedelta
 from math import ceil, floor
 
-from log import error
+from log import error, info
 
 
 class Savings:
@@ -81,6 +81,10 @@ class Savings:
         # Calculate pre-tax contributions. MUST BE DONE FIRST!
         percent_match = self.cfg.save.percent_match / 100.0
         self.best_pre = self._opt("pre")
+        info(
+            f"# savings best pre-tax: {','.join(map(str, self.best_pre))}",
+            level=3,
+        )
         ytd_left = self.cap_pre
         for index, income in enumerate(self.salary):
             income.percent_401k = self.best_pre[index] / 100.0
@@ -93,6 +97,10 @@ class Savings:
 
         # Calculate post-tax contributions. MUST BE DONE SECOND!
         self.best_post = self._opt("post")
+        info(
+            f"# savings best post-tax: {','.join(map(str, self.best_post))}",
+            level=3,
+        )
         ytd_left = self.cap_post
         for index, income in enumerate(self.salary):
             income.percent_401k_post = self.best_post[index] / 100.0
