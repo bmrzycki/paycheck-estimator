@@ -166,7 +166,7 @@ class Income:
             if attr.endswith("_quantity"):
                 s += f"{title.rjust(pad)}  {value:,.2f}\n"
             elif attr.startswith("percent_"):
-                s += f"{title.rjust(pad)}  {value / 100.0:.2%}\n"
+                s += f"{title.rjust(pad)}  {value:.2%}\n"
             elif isinstance(value, float):
                 s += f"{title.rjust(pad)}  ${value:13,.2f}\n"
             elif isinstance(value, datetime):
