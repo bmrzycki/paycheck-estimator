@@ -14,6 +14,7 @@ class Config:
     "User configuration"
 
     def __init__(self, filename=None):
+        # pylint: disable=too-many-statements
         if filename is None:
             filename = __file__
         self.filename = Path(filename).resolve()
@@ -31,6 +32,12 @@ class Config:
         self.pay.vacation_buy = 0.0
         self.pay.increase = Holder("Regular pay increase")
         self.pay.increase.start_date = None
+        self.pay.espp = Holder("Employee Stock Purchase Program")
+        self.pay.espp.percent_prev_year = 0
+        self.pay.espp.percent_first = 0
+        self.pay.espp.percent_second = 0
+        self.pay.espp.date_first = None
+        self.pay.espp.date_second = None
         self.pay.withhold = []  # Updated with self.withhold()
         # Sometimes things happen and the company makes a mistake. Set to a
         # float to alter the net income's first paychek.
@@ -84,10 +91,15 @@ class Config:
         self._validate()
 
     def _validate(self):
+        # pylint: disable=too-many-branches
         # Set the pay increase start_date now because it's depenenent on what
         # the child sets self.year to, defaults to April 1, self.year.
         if self.pay.increase.start_date is None:
             self.pay.increase.start_date = self.day(4, 1)
+        if self.pay.espp.date_first is None:
+            self.pay.espp.date_first = self.day(3, 1)
+        if self.pay.espp.date_second is None:
+            self.pay.espp.date_second = self.day(9, 1)
         if self.version is None:
             self.version = repo_version(self.filename.parent)
         if not self.federal.personal_exemption:
