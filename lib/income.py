@@ -158,6 +158,8 @@ class Income:
             s += f", kind={self.kind}"
         if self.rsu_quantity:
             s += f", rsu_quantity={self.rsu_quantity:,.2f}"
+        if self.rsu_vest_price:
+            s += f", rsu_vest_price={self.rsu_vest_price:,.2f}"
         if self.percent_tax_federal:
             s += f", tax_federal_%={self.percent_tax_federal:,.2f}"
         return s + ")"
