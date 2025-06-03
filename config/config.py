@@ -23,6 +23,7 @@ class Config(BaseConfig):
         ]
 
         # ESPP: see documentation in lib/espp.py.
+        self.pay.espp.price_buy_second = 20.0
         self.pay.espp.percent_second = 5
 
         # Withhold $500 per-salaried paycheck from April 1 to June 1, $700

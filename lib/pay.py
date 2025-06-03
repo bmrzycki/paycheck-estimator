@@ -27,7 +27,9 @@ class Pay:
         self._ytd_gross()
         # ^^^ Creates several YTD values for income
         Savings(cfg, self.income)
-        ESPP(cfg, self.income)
+        espp_obj = ESPP(cfg, self.income)
+        self.income.extend(espp_obj.buys())
+        self.income.sort()
         # ^^^ Federal deductions must come AFTER 401(k) calculations and ESPP
         self._federal_deductions()
         # ^^^ Pre-tax deductions must come BEFORE tax calculations

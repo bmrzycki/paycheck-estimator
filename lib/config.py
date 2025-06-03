@@ -41,6 +41,10 @@ class Config:
         self.pay.espp.percent_third = 0
         self.pay.espp.date_first = None
         self.pay.espp.date_second = None
+        self.pay.espp.price_start_first = 0.0
+        self.pay.espp.price_start_second = 0.0
+        self.pay.espp.price_buy_first = 0.0
+        self.pay.espp.price_buy_second = 0.0
         self.pay.withhold = []  # Updated with self.withhold()
         # Sometimes things happen and the company makes a mistake. Set to a
         # float to alter the net income's first paychek.
