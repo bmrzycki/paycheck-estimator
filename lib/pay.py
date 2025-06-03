@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from espp import ESPP
 from federal import Federal
 from git import repo_version
 from log import info, error, verbose_level
@@ -26,7 +27,8 @@ class Pay:
         self._ytd_gross()
         # ^^^ Creates several YTD values for income
         Savings(cfg, self.income)
-        # ^^^ Federal deductions must come AFTER 401(k) calculations
+        ESPP(cfg, self.income)
+        # ^^^ Federal deductions must come AFTER 401(k) calculations and ESPP
         self._federal_deductions()
         # ^^^ Pre-tax deductions must come BEFORE tax calculations
         Federal(cfg, self.income)
@@ -40,12 +42,11 @@ class Pay:
         for income in self.income:
             if income.kind == "rsu":
                 ytd_rsu_quantity_remaining += income.rsu_quantity
-        ytd_gross = ytd_gross_supplimental = ytd_withhold = ytd_espp = 0.0
+        ytd_gross = ytd_gross_supplimental = ytd_withhold = 0.0
         for income in self.income:
             if income.kind == "salary":
                 ytd_gross += income.gross
                 ytd_withhold += income.withhold
-                ytd_espp += income.espp
             else:
                 if income.kind == "rsu":
                     ytd_rsu_quantity_remaining -= income.rsu_quantity
@@ -55,7 +56,6 @@ class Pay:
             income.ytd_gross_supplimental = ytd_gross_supplimental
             income.ytd_gross_total = ytd_gross + ytd_gross_supplimental
             income.ytd_withhold = ytd_withhold
-            income.ytd_espp = ytd_espp
             income.ytd_rsu_quantity_remaining = ytd_rsu_quantity_remaining
             income.ytd_rsu_quantity_vested = ytd_rsu_quantity_vested
 

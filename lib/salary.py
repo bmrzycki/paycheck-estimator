@@ -15,18 +15,6 @@ class Salary:
         self.percent = cfg.pay.increase.percent / 100.0
         self.post_increase += self.pre_increase * self.percent
 
-    def _espp(self, income):
-        """
-        Update income for ESPP withholdings.
-        """
-        if income.date < self.cfg.pay.espp.date_first:
-            income.percent_espp = self.cfg.pay.espp.percent_prev_year / 100.0
-        elif income.date < self.cfg.pay.espp.date_second:
-            income.percent_espp = self.cfg.pay.espp.percent_first / 100.0
-        else:
-            income.percent_espp = self.cfg.pay.espp.percent_second / 100.0
-        income.espp = income.gross * income.percent_espp
-
     def __iter__(self):
         friday = 4  # datetime.weekday() -> 0 is Monday, 6 is Sunday
         # Salary is paid 24 times a year, what the IRS calls "semimonthly",
@@ -57,5 +45,4 @@ class Salary:
                 income.vision = float(self.cfg.pay.vision)
                 income.vacation_buy = float(self.cfg.pay.vacation_buy)
                 income.withhold = self.cfg.withhold_amount(date)
-                self._espp(income)
                 yield income

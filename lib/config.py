@@ -33,9 +33,12 @@ class Config:
         self.pay.increase = Holder("Regular pay increase")
         self.pay.increase.start_date = None
         self.pay.espp = Holder("Employee Stock Purchase Program")
-        self.pay.espp.percent_prev_year = 0
+        self.pay.espp.cap_irs = 25_000
+        self.pay.espp.carryover = 0.0
+        self.pay.espp.percent_discount = 15
         self.pay.espp.percent_first = 0
         self.pay.espp.percent_second = 0
+        self.pay.espp.percent_third = 0
         self.pay.espp.date_first = None
         self.pay.espp.date_second = None
         self.pay.withhold = []  # Updated with self.withhold()

@@ -22,9 +22,8 @@ class Config(BaseConfig):
             self.supplimental(9, 30, 10_000.0, "special bonus"),
         ]
 
-        # ESPP
-        self.pay.espp.percent_first = 0
-        self.pay.espp.percent_second = 0
+        # ESPP: see documentation in lib/espp.py.
+        self.pay.espp.percent_second = 5
 
         # Withhold $500 per-salaried paycheck from April 1 to June 1, $700
         # from June 2 to Sept 1, and disable withholdings for the rest of
