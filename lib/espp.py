@@ -40,11 +40,12 @@ class ESPP:
     def __init__(self, cfg, income_list):
         self.cfg = cfg
         self.income = income_list
+        self.percent_discount = self.cfg.pay.espp.percent_discount / 100.0
         self.ytd = 0.0
         self.sums = {"first": 0.0, "second": 0.0}
 
         cap_real = self.cfg.pay.espp.cap_irs
-        cap_real *= 1.0 - (self.cfg.pay.espp.percent_discount / 100.0)
+        cap_real *= 1.0 - self.percent_discount
 
         # First: From Jan 1 to the paycheck before the first buy
         date_start = self.cfg.day(1, 1)
@@ -106,6 +107,8 @@ class ESPP:
                 error(f"bad ESPP start price {start_price} for {name} buy")
             curr_price = Stock(self.cfg.rsu_url).price()
             buy_price = min(start_price, curr_price)
+        # Add the company's discount to the cash amount.
+        amount += amount * self.percent_discount
         gross = floor(amount / buy_price) * buy_price
         return Income(date, gross, kind="espp")
 
