@@ -24,13 +24,14 @@ class Pay:
         self.income = sorted(
             list(Salary(cfg)) + cfg.income.supplimental + cfg.income.rsu
         )
-        self._ytd_gross()
-        # ^^^ Creates several YTD values for income
-        Savings(cfg, self.income)
         espp_obj = ESPP(cfg, self.income)
         self.income.extend(espp_obj.buys())
         self.income.sort()
-        # ^^^ Federal deductions must come AFTER 401(k) calculations and ESPP
+        # ^^^ Update for ESPP before calculating YTD values
+        self._ytd_gross()
+        # ^^^ Creates several YTD values for income
+        Savings(cfg, self.income)
+        # ^^^ Federal deductions must come AFTER 401(k) calculations
         self._federal_deductions()
         # ^^^ Pre-tax deductions must come BEFORE tax calculations
         Federal(cfg, self.income)
